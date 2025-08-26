@@ -2,6 +2,8 @@ import PillarPage from '../../components/PillarPage';
 import { Item } from '../../types';
 
 export default async function ReadPage() {
+  console.log('Fetching from:', `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=read`);
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=read`,
     { cache: 'no-store' }
