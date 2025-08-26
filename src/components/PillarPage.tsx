@@ -111,13 +111,12 @@ export default function PillarPage({
                 <button
                   key={btn.value}
                   onClick={() => setFilter(btn.value)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium border transition
-                    ${
-                      filter === btn.value
-                        ? `bg-${btn.color} text-white border-${btn.color} hover:opacity-90`
-                        : `bg-white text-${btn.color} border-${btn.color} hover:bg-${btn.color} hover:text-white`
-                    }`}
-                >
+                  className={`px-4 py-2 rounded-full text-sm font-medium border transition ${
+                    filter === btn.value
+                      ? `bg-${btn.color} text-white border-${btn.color} hover:opacity-90`
+                      : `bg-white text-${btn.color} border-${btn.color} hover:bg-${btn.color} hover:text-${btn.color} hover:border-${btn.color}`
+                  }`}
+                  >
                   {btn.label}
                 </button>
               ))}
@@ -142,12 +141,12 @@ export default function PillarPage({
       )}
 
       {/* Loading state */}
-      {loading && (
+      {loading && accent != 'about' && accent !='support' && (
         <div className="text-center py-8 text-gray-500">Loading...</div>
       )}
 
       {/* Empty state */}
-      {!loading && filteredItems.length === 0 && (
+      {!loading && filteredItems.length === 0 &&  accent != 'about' && accent !='support' && (
         <div className="text-center py-8 text-gray-500">No results found.</div>
       )}
     </div>

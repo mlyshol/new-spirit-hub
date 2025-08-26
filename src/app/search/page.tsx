@@ -10,13 +10,6 @@ export default function SearchPage() {
   const [filter, setFilter] = useState<Accent | 'all'>('all');
   const [loading, setLoading] = useState(false);
 
-  const filters: { label: string; value: Accent | 'all'; color: string }[] = [
-  { label: 'All', value: 'all', color: 'neutral' },
-  { label: '🎥 Watch', value: 'watch', color: 'watch' },
-  { label: '🎧 Listen', value: 'listen', color: 'listen' },
-  { label: '📖 Read', value: 'read', color: 'read' },
-  ];
-
   useEffect(() => {
     async function fetchItems() {
       setLoading(true);
@@ -58,7 +51,6 @@ export default function SearchPage() {
       onSearchChange={setQuery}    // ✅ passes setter to PillarPage
       filter={filter}              // ✅ controlled filter
       onFilterChange={setFilter}   // ✅ passes setter to PillarPage
-      filters={filters}
       loading={loading}
     />
   );
