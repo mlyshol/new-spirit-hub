@@ -1,0 +1,1 @@
+export function searchContent(query: string) { /* search logic here */ }

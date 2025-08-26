@@ -1,0 +1,1 @@
+export function getContent(type: string, slug: string) { /* fetch logic here */ }

@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-watch: #D4AF37;
+  --color-listen: #008080;
+  --color-read: #6A0DAD;
+  --color-search: #1E90FF;
+  --color-neutral: #1a1a1a;
+  --color-about: #FF6F00;
+  --color-support: #6A1B1A;
+  --font-heading: Montserrat, sans-serif;
+  --font-body: Inter, sans-serif;
+}
