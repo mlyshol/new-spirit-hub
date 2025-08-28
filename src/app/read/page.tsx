@@ -1,19 +1,13 @@
 import PillarPage from '../../components/PillarPage';
 import { Item } from '../../types';
+import { safeFetchItems } from '../../lib/safeFetch';
 
 export default async function ReadPage() {
-  console.log('Fetching from:', `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=read`);
-
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=read`,
-    { cache: 'no-store' }
-  );
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch read items: ${res.statusText}`);
-  }
-
-  const { items }: { items: Item[] } = await res.json();
+  const fallback = { items: [] as Item[] }; // or placeholder
+        const { items } = await safeFetchItems<{ items: Item[] }>(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=read`,
+          fallback
+        );
 
   return (
     <PillarPage

@@ -1,18 +1,15 @@
 // app/page.tsx
 import ContentGrid from '../components/ContentGrid';
+import { safeFetchItems } from '../lib/safeFetch';
 import { Item } from '../types';
 
 export default async function Home() {
   // Fetch latest posts from your Express API
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/latest-posts`, {
-    cache: 'no-store'
-  });
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch latest posts');
-  }
-
-  const { items: latestPosts }: { items: Item[] } = await res.json();
+  const fallback = { items: [] as Item[] }; // or placeholder
+  const { items:latestPosts } = await safeFetchItems<{ items: Item[] }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/latest-posts`,
+    fallback
+  );
 
   return (
     <div>

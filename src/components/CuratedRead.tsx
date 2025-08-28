@@ -43,7 +43,12 @@ export default function CuratedRead({
           rel="noopener noreferrer"
           className="text-read font-medium"
         >
-          Read the full article on {source} →
+        {source ? (
+          <span>
+            Read more at {source} →
+          </span>
+        ) : null}
+
         </a>
       </p>
     </DetailPage>

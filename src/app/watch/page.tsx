@@ -1,17 +1,13 @@
 import PillarPage from '../../components/PillarPage';
 import { Item } from '../../types';
+import { safeFetchItems } from '../../lib/safeFetch';
 
 export default async function WatchPage() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=watch`,
-    { cache: 'no-store' }
-  );
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch watch items: ${res.statusText}`);
-  }
-
-  const { items } = await res.json(); // ✅ destructure from API object
+  const fallback = { items: [] as Item[] }; // or placeholder
+      const { items } = await safeFetchItems<{ items: Item[] }>(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/items?accent=watch`,
+        fallback
+      );
 
   return (
     <PillarPage

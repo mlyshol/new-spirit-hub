@@ -2,7 +2,7 @@
 import CuratedRead from '../../../components/CuratedRead';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
-
+import { safeFetchItems } from '../../../lib/safeFetch';
 export default async function ReadDetail({
   params
 }: {
@@ -12,16 +12,22 @@ export default async function ReadDetail({
   const { readSlug } = await params;
   const accent = 'read';
   const slug = readSlug;
+  const fallback: { item: Item; relatedItems: Item[] } = {
+      item: {
+        title: 'Content temporarily unavailable',
+        description: 'Please check back later.',
+        href: '#',
+        type: 'Not Available',
+        accent: 'read',
+        published: false
+      },
+      relatedItems: []
+    };
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-    { cache: 'no-store' }
-  );
-
-  if (!res.ok) throw new Error('Failed to fetch detail');
-
-  const { item, relatedItems }: { item: Item; relatedItems: Item[] } =
-    await res.json();
+    const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
+        fallback
+      );
 
   return (
     <>

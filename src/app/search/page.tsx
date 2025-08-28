@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PillarPage from '../../components/PillarPage';
 import { Item, Accent } from '../../types';
+import { safeFetchItems } from '../../lib/safeFetch';
 
 export default function SearchPage() {
   const [items, setItems] = useState<Item[]>([]);
@@ -17,16 +18,12 @@ export default function SearchPage() {
         const params = new URLSearchParams();
         if (filter !== 'all') params.append('accent', filter);
         if (query.trim()) params.append('q', query.trim());
-
-        const res = await fetch(
+        const fallback = { items: [] as Item[] }; // or placeholder
+        const { items } = await safeFetchItems<{ items: Item[] }>(
           `${process.env.NEXT_PUBLIC_API_URL}/api/items?${params.toString()}`,
-          { cache: 'no-store' }
+          fallback
         );
-
-        if (!res.ok) throw new Error(`Failed to fetch items: ${res.statusText}`);
-
-        const data = await res.json();
-        setItems(Array.isArray(data) ? data : data.items);
+        setItems(items);
       } catch (err) {
         console.error(err);
         setItems([]);

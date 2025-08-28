@@ -1,6 +1,8 @@
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
+import { safeFetchItems } from '../../../lib/safeFetch';
+
 export default async function VideoDetail({ params }: { params: Promise<{ watchSlug: string }> }) {
   const { watchSlug } = await params; // ✅ await before destructuring
   const accent = 'watch';
@@ -13,15 +15,22 @@ export default async function VideoDetail({ params }: { params: Promise<{ watchS
           day: 'numeric',
         })
       : null;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-    { cache: 'no-store' }
-  );
-
-  if (!res.ok) throw new Error('Failed to fetch detail');
-
-  const { item, relatedItems }: { item: Item; relatedItems: Item[] } =
-    await res.json();
+  const fallback: { item: Item; relatedItems: Item[] } = {
+        item: {
+          title: 'Content temporarily unavailable',
+          description: 'Please check back later.',
+          href: '#',
+          type: 'Not Available',
+          accent: 'watch',
+          published: false
+        },
+        relatedItems: []
+      };
+  
+      const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
+          fallback
+        );
 
 
   return (
