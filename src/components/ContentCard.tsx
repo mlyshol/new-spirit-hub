@@ -31,7 +31,14 @@ export default function ContentCard({
       href={href}
       className="block rounded-lg overflow-hidden shadow-card hover:-translate-y-1 transition-smooth relative"
     >
-      <img src={displayImage} alt={title} className="w-full h-56 object-cover" />
+
+      <div className="w-full aspect-[16/9]">
+        <img
+          src={displayImage}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
       <div className={`absolute top-4 left-4 bg-${badgeAccent || accent} text-white text-xs font-semibold px-3 py-1 rounded`}>
         {type}
