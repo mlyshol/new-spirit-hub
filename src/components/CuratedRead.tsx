@@ -32,8 +32,8 @@ export default function CuratedRead({
       accent="read"
       image={image} // DetailPage already falls back to default_read.jpg if missing
     >
-      {embedCode ? (
-          <div dangerouslySetInnerHTML={{ __html: embedCode}} />
+      {description ? (
+          <div dangerouslySetInnerHTML={{ __html: description}} />
         ) : null}
 
       <p className="mt-8">
