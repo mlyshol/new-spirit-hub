@@ -16,7 +16,7 @@ export default function DetailPage({
   children,
 }: DetailPageProps) {
   const fallbackImage = `/images/default_${accent}.jpg`;
-  const displayImage = image || fallbackImage;
+  const displayImage = fallbackImage;
 
   const formatDate = (d?: string) =>
     d
