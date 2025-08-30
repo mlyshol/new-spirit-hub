@@ -3,11 +3,9 @@ import { Item } from '../../types';
 import { safeFetchItems } from '../../lib/safeFetch';
 import type { Metadata } from 'next';
 
-export function generateMetadata(): Metadata {
-  return {
-    title: 'Listen – The Spirit Hub',
-  };
-}
+export const metadata: Metadata = {
+  title: 'Read',
+};
 
 
 export default async function ReadPage() {

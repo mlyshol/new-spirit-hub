@@ -6,12 +6,9 @@ import { Item, Accent } from '../../types';
 import { safeFetchItems } from '../../lib/safeFetch';
 import type { Metadata } from 'next';
 
-function generateMetadata(): Metadata {
-  return {
-    title: 'Search – The Spirit Hub',
-  };
-}
-
+export const metadata: Metadata = {
+  title: 'Search',
+};
 
 export default function SearchPage() {
   const [items, setItems] = useState<Item[]>([]);
