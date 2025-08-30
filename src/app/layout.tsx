@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    default: 'The2 Spirit Hub',
+    default: 'The Spirit Hub',
     template: '%s – The Spirit Hub',
   },
 };
