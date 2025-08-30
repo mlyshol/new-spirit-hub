@@ -1,11 +1,12 @@
 import PillarPage from '../../components/PillarPage';
 import type { Metadata } from 'next';
 
-export function generateMetadata({ params }: { params: { accent: string } }): Metadata {
+export function generateMetadata(): Metadata {
   return {
-    title: `Support – The Spirit Hub`,
+    title: 'Support – The Spirit Hub',
   };
 }
+
 
 export default function SupportPage() {
   return (
