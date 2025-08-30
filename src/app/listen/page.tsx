@@ -1,6 +1,14 @@
 import PillarPage from '../../components/PillarPage';
 import { Item } from '../../types';
 import { safeFetchItems } from '../../lib/safeFetch';
+import type { Metadata } from 'next';
+
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Listen – The Spirit Hub',
+  };
+}
+
 
 export default async function ListenPage() {
   const fallback = { items: [] as Item[] }; // or placeholder

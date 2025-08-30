@@ -4,6 +4,14 @@ import { useState, useEffect } from 'react';
 import PillarPage from '../../components/PillarPage';
 import { Item, Accent } from '../../types';
 import { safeFetchItems } from '../../lib/safeFetch';
+import type { Metadata } from 'next';
+
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Search – The Spirit Hub',
+  };
+}
+
 
 export default function SearchPage() {
   const [items, setItems] = useState<Item[]>([]);

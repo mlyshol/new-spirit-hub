@@ -1,4 +1,12 @@
 import PillarPage from '../../components/PillarPage';
+import type { Metadata } from 'next';
+
+export function generateMetadata(): Metadata {
+  return {
+    title: 'About – The Spirit Hub',
+  };
+}
+
 
 export default function AboutPage() {
   return (
