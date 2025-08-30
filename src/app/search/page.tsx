@@ -6,7 +6,7 @@ import { Item, Accent } from '../../types';
 import { safeFetchItems } from '../../lib/safeFetch';
 import type { Metadata } from 'next';
 
-export function generateMetadata(): Metadata {
+function generateMetadata(): Metadata {
   return {
     title: 'Search – The Spirit Hub',
   };
