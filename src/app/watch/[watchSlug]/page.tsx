@@ -1,50 +1,37 @@
-// app/watch/[watchSlug]/page.tsx
-import type { Metadata } from 'next';
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
-import { buildMetadata } from '../../../lib/metadata';
 
-const accent = 'watch';
-async function fetchWatchDetail(slug: string) {
+export default async function VideoDetail({ params }: { params: Promise<{ watchSlug: string }> }) {
+  const { watchSlug } = await params; // ✅ await before destructuring
+  const accent = 'watch';
+  const slug = watchSlug;
+  const formatDate = (d?: string) =>
+    d
+      ? new Date(d).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      : null;
   const fallback: { item: Item; relatedItems: Item[] } = {
-    item: {
-      title: 'Content temporarily unavailable',
-      description: 'Please check back later.',
-      href: '#',
-      type: 'Not Available',
-      accent,
-      published: false,
-    },
-    relatedItems: [],
-  };
+        item: {
+          title: 'Content temporarily unavailable',
+          description: 'Please check back later.',
+          href: '#',
+          type: 'Not Available',
+          accent: 'watch',
+          published: false
+        },
+        relatedItems: []
+      };
+  
+      const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
+          fallback
+        );
 
-  return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-    fallback
-  );
-}
-
-export async function generateMetadata(
-  { params }: { params: { watchSlug: string } }
-): Promise<Metadata> {
-  const { item } = await fetchWatchDetail(params.watchSlug);
-
-  return buildMetadata({
-    title: item.title,
-    description: item.description
-      ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
-      : 'Watch inspiring faith‑centered content on The Spirit Hub.',
-  });
-}
-
-export default async function VideoDetail({
-  params,
-}: {
-  params: { watchSlug: string };
-}) {
-  const { item, relatedItems } = await fetchWatchDetail(params.watchSlug);
 
   return (
     <>
