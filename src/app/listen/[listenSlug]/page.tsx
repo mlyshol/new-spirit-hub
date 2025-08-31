@@ -1,16 +1,15 @@
+// app/listen/[listenSlug]/page.tsx
+import type { Metadata } from 'next';
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
+import { buildMetadata } from '../../../lib/metadata';
 
-export default async function ListenDetail({
-  params,
-}: {
-  params: { listenSlug: string };
-}) {
-  const slug = params.listenSlug; // ✅ no await needed
-  const accent = 'listen';
+const accent = 'listen';
 
+// Centralized fetch so metadata + page share the same logic
+async function fetchListenDetail(slug: string) {
   const fallback: { item: Item; relatedItems: Item[] } = {
     item: {
       title: 'Content temporarily unavailable',
@@ -23,13 +22,31 @@ export default async function ListenDetail({
     relatedItems: [],
   };
 
-  const { item, relatedItems } = await safeFetchItems<{
-    item: Item;
-    relatedItems: Item[];
-  }>(
+  return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
     `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
     fallback
   );
+}
+
+export async function generateMetadata(
+  { params }: { params: { listenSlug: string } }
+): Promise<Metadata> {
+  const { item } = await fetchListenDetail(params.listenSlug);
+
+  return buildMetadata({
+    title: item.title,
+    description: item.description
+      ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
+      : 'Listen to inspiring faith‑centered content on The Spirit Hub.',
+  });
+}
+
+export default async function ListenDetail({
+  params,
+}: {
+  params: { listenSlug: string };
+}) {
+  const { item, relatedItems } = await fetchListenDetail(params.listenSlug);
 
   return (
     <>

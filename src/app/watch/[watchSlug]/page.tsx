@@ -6,9 +6,7 @@ import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
 import { buildMetadata } from '../../../lib/metadata';
 
-const accent = 'watch';
-
-// Centralized fetch so metadata + page share the same logic
+const accent = 'watch';   
 async function fetchWatchDetail(slug: string) {
   const fallback: { item: Item; relatedItems: Item[] } = {
     item: {
@@ -30,7 +28,7 @@ async function fetchWatchDetail(slug: string) {
 
 export async function generateMetadata(
   { params }: { params: { watchSlug: string } }
-): Promise<Metadata> {
+){
   const { item } = await fetchWatchDetail(params.watchSlug);
 
   return buildMetadata({
