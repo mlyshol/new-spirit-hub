@@ -6,7 +6,7 @@ import { buildMetadata } from 'src/lib/metadata';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 interface PageParams {
-  params: { watchSlug: string };
+  params: Promise<{ watchSlug: string }>;
 }
 
 const fallback: { item: Item; relatedItems: Item[] } = {
@@ -34,7 +34,10 @@ export async function generateMetadata(
   { params }: PageParams,
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { item } = await getVideoData(params.watchSlug);
+  // ✅ Await the promise before using it
+  const { watchSlug } = await params;
+
+  const { item } = await getVideoData(watchSlug);
 
   return buildMetadata({
     title: item.title,
@@ -43,7 +46,11 @@ export async function generateMetadata(
 }
 
 export default async function VideoDetail({ params }: PageParams) {
-  const { item, relatedItems } = await getVideoData(params.watchSlug);
+  // ✅ Await the promise before using it
+  const { watchSlug } = await params;
+
+  const { item, relatedItems } = await getVideoData(watchSlug);
+
 
   return (
     <>
