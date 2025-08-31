@@ -1,8 +1,8 @@
 // app/read/[readSlug]/page.tsx
-import CuratedRead from '../../../components/CuratedRead';
-import RelatedContent from '../../../components/RelatedContent';
-import { Item } from '../../../types';
-import { safeFetchItems } from '../../../lib/safeFetch';
+import CuratedRead from 'src/components/CuratedRead';
+import RelatedContent from 'src/components/RelatedContent';
+import { Item } from 'src/types';
+import { safeFetchItems } from 'src/lib/safeFetch';
 export default async function ReadDetail({
   params
 }: {

@@ -1,8 +1,8 @@
 // app/listen/[listenSlug]/page.tsx
-import DetailPage from '../../../components/DetailPage';
-import RelatedContent from '../../../components/RelatedContent';
-import { Item } from '../../../types';
-import { safeFetchItems } from '../../../lib/safeFetch';
+import DetailPage from 'src/components/DetailPage';
+import RelatedContent from 'src/components/RelatedContent';
+import { Item } from 'src/types';
+import { safeFetchItems } from 'src/lib/safeFetch';
 export default async function ListenDetail({
   params
 }: {

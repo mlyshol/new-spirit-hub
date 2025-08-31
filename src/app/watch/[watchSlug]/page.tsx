@@ -1,37 +1,39 @@
 import type { Metadata } from 'next';
-import { buildMetadata } from '../../../lib/metadata';
-import DetailPage from '../../../components/DetailPage';
-import RelatedContent from '../../../components/RelatedContent';
-import { Item } from '../../../types';
-import { safeFetchItems } from '../../../lib/safeFetch';
+import { buildMetadata } from 'src/lib/metadata';
+import DetailPage from 'src/components/DetailPage';
+import RelatedContent from 'src/components/RelatedContent';
+import { Item } from 'src/types';
+import { safeFetchItems } from 'src/lib/safeFetch';
 
 interface PageParams {
-  params: Promise<{ watchSlug: string }>;
+  params: { watchSlug: string };
 }
 
-// ✅ This runs before rendering to set per‑page metadata
-export async function generateMetadata(
-  { params }: { params: { watchSlug: string } }
-): Promise<Metadata> {
-  const { watchSlug } = params;
+const fallback: { item: Item; relatedItems: Item[] } = {
+  item: {
+    title: 'Content temporarily unavailable',
+    description: 'Please check back later.',
+    href: '#',
+    type: 'Not Available',
+    accent: 'watch',
+    published: false
+  },
+  relatedItems: []
+};
 
-  // You can fetch just enough data for metadata here
-  const fallback: { item: Item; relatedItems: Item[] } = {
-    item: {
-      title: 'Content temporarily unavailable',
-      description: 'Please check back later.',
-      href: '#',
-      type: 'Not Available',
-      accent: 'watch',
-      published: false
-    },
-    relatedItems: []
-  };
-
-  const { item } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/watch/${watchSlug}`,
+// ✅ Centralized fetch so both functions use the same logic
+async function getVideoData(slug: string) {
+  return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/watch/${slug}`,
     fallback
   );
+}
+
+// Runs before rendering to set SEO tags
+export async function generateMetadata(
+  { params }: PageParams
+): Promise<Metadata> {
+  const { item } = await getVideoData(params.watchSlug);
 
   return buildMetadata({
     title: item.title,
@@ -40,26 +42,7 @@ export async function generateMetadata(
 }
 
 export default async function VideoDetail({ params }: PageParams) {
-  const { watchSlug } = await params;
-  const accent = 'watch';
-  const slug = watchSlug;
-
-  const fallback: { item: Item; relatedItems: Item[] } = {
-    item: {
-      title: 'Content temporarily unavailable',
-      description: 'Please check back later.',
-      href: '#',
-      type: 'Not Available',
-      accent: 'watch',
-      published: false
-    },
-    relatedItems: []
-  };
-
-  const { item, relatedItems } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-    fallback
-  );
+  const { item, relatedItems } = await getVideoData(params.watchSlug);
 
   return (
     <>
