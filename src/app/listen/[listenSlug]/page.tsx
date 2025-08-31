@@ -2,7 +2,8 @@ import DetailPage from 'src/components/DetailPage';
 import RelatedContent from 'src/components/RelatedContent';
 import { Item } from 'src/types';
 import { safeFetchItems } from 'src/lib/safeFetch';
-
+import { buildMetadata } from 'src/lib/metadata';
+import type { Metadata, ResolvingMetadata } from 'next';
 // Keep params as a Promise type
 interface PageParams {
   params: Promise<{ listenSlug: string }>;
@@ -26,6 +27,21 @@ async function getListenData(slug: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/listen/${slug}`,
     fallback
   );
+}
+
+export async function generateMetadata(
+  { params }: PageParams,
+  _parent: ResolvingMetadata
+): Promise<Metadata> {
+  // ✅ Await the promise before using it
+  const { listenSlug } = await params;
+
+  const { item } = await getListenData(listenSlug);
+
+  return buildMetadata({
+    title: item.title,
+    description: item.description
+  });
 }
 
 export default async function ListenDetail({ params }: PageParams) {
