@@ -7,11 +7,9 @@ import { safeFetchItems } from '../../../lib/safeFetch';
 import { buildMetadata } from '../../../lib/metadata';
 
 const accent = 'read';
-export async function generateMetadata(
-  { params }: { params: { readSlug: string } }
-): Promise<Metadata> {
-  const slug = params.readSlug;
 
+// Centralized fetch so metadata + page share the same logic
+async function fetchReadDetail(slug: string) {
   const fallback: { item: Item; relatedItems: Item[] } = {
     item: {
       title: 'Content temporarily unavailable',
@@ -24,10 +22,16 @@ export async function generateMetadata(
     relatedItems: [],
   };
 
-  const { item } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
+  return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
     `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
     fallback
   );
+}
+
+export async function generateMetadata(
+  { params }: { params: { readSlug: string } }
+): Promise<Metadata> {
+  const { item } = await fetchReadDetail(params.readSlug);
 
   return buildMetadata({
     title: item.title,
@@ -42,24 +46,7 @@ export default async function ReadDetail({
 }: {
   params: { readSlug: string };
 }) {
-  const slug = params.readSlug;
-
-  const fallback: { item: Item; relatedItems: Item[] } = {
-    item: {
-      title: 'Content temporarily unavailable',
-      description: 'Please check back later.',
-      href: '#',
-      type: 'Not Available',
-      accent,
-      published: false,
-    },
-    relatedItems: [],
-  };
-
-  const { item, relatedItems } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-    fallback
-  );
+  const { item, relatedItems } = await fetchReadDetail(params.readSlug);
 
   return (
     <>
