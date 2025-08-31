@@ -1,7 +1,7 @@
-import DetailPage from 'src/components/DetailPage';
-import RelatedContent from 'src/components/RelatedContent';
-import { Item } from 'src/types';
-import { safeFetchItems } from 'src/lib/safeFetch';
+import DetailPage from '../../../components/DetailPage';
+import RelatedContent from '../../../components/RelatedContent';
+import { Item } from '../../../types';
+import { safeFetchItems } from '../../../lib/safeFetch';
 import { buildMetadata } from 'src/lib/metadata';
 import type { Metadata, ResolvingMetadata } from 'next';
 
@@ -21,6 +21,7 @@ const fallback: { item: Item; relatedItems: Item[] } = {
   relatedItems: []
 };
 
+// ✅ Shared fetch logic so both page + metadata use the same data
 async function getVideoData(slug: string) {
   return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
     `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/watch/${slug}`,
@@ -28,11 +29,13 @@ async function getVideoData(slug: string) {
   );
 }
 
+// ✅ Production‑safe dynamic metadata
 export async function generateMetadata(
   { params }: PageParams,
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { item } = await getVideoData(params.watchSlug);
+
   return buildMetadata({
     title: item.title,
     description: item.description
