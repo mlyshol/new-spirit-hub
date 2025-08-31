@@ -1,37 +1,65 @@
+import type { Metadata } from 'next';
+import { buildMetadata } from '../../../lib/metadata';
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
 
-export default async function VideoDetail({ params }: { params: Promise<{ watchSlug: string }> }) {
-  const { watchSlug } = await params; // ✅ await before destructuring
+interface PageParams {
+  params: Promise<{ watchSlug: string }>;
+}
+
+// ✅ This runs before rendering to set per‑page metadata
+export async function generateMetadata(
+  { params }: { params: { watchSlug: string } }
+): Promise<Metadata> {
+  const { watchSlug } = params;
+
+  // You can fetch just enough data for metadata here
+  const fallback: { item: Item; relatedItems: Item[] } = {
+    item: {
+      title: 'Content temporarily unavailable',
+      description: 'Please check back later.',
+      href: '#',
+      type: 'Not Available',
+      accent: 'watch',
+      published: false
+    },
+    relatedItems: []
+  };
+
+  const { item } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/watch/${watchSlug}`,
+    fallback
+  );
+
+  return buildMetadata({
+    title: item.title,
+    description: item.description
+  });
+}
+
+export default async function VideoDetail({ params }: PageParams) {
+  const { watchSlug } = await params;
   const accent = 'watch';
   const slug = watchSlug;
-  const formatDate = (d?: string) =>
-    d
-      ? new Date(d).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      : null;
-  const fallback: { item: Item; relatedItems: Item[] } = {
-        item: {
-          title: 'Content temporarily unavailable',
-          description: 'Please check back later.',
-          href: '#',
-          type: 'Not Available',
-          accent: 'watch',
-          published: false
-        },
-        relatedItems: []
-      };
-  
-      const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-          fallback
-        );
 
+  const fallback: { item: Item; relatedItems: Item[] } = {
+    item: {
+      title: 'Content temporarily unavailable',
+      description: 'Please check back later.',
+      href: '#',
+      type: 'Not Available',
+      accent: 'watch',
+      published: false
+    },
+    relatedItems: []
+  };
+
+  const { item, relatedItems } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
+    fallback
+  );
 
   return (
     <>
