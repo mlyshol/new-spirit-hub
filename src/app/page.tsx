@@ -1,8 +1,20 @@
 // app/page.tsx
-import ContentGrid from '../components/ContentGrid';
-import { safeFetchItems } from '../lib/safeFetch';
-import { Item } from '../types';
+import ContentGrid from 'src/components/ContentGrid';
+import { safeFetchItems } from 'src/lib/safeFetch';
+import { Item } from 'src/types';
+import type { Metadata } from 'next';
+import { buildMetadata } from 'src/lib/metadata';
 
+const PAGE_TITLE = 'The Spirit Hub';
+const PAGE_DESCRIPTION =
+  'Watch. Listen. Read. Christ-centered content to guide and encourage your walk. Step into the Hub.';
+export function generateMetadata(): Metadata {
+  return buildMetadata({
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  });
+}
+  
 export default async function Home() {
   // Fetch latest posts from your Express API
   const fallback = { items: [] as Item[] }; // or placeholder
