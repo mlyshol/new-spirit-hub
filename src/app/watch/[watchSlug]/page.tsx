@@ -38,7 +38,6 @@ export async function generateMetadata(
     description: item.description
       ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
       : 'Watch inspiring faith‑centered content on The Spirit Hub.',
-    image: item.image,
   });
 }
 
