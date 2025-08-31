@@ -2,48 +2,36 @@ import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
-import { buildMetadata } from 'src/lib/metadata';
-import type { Metadata, ResolvingMetadata } from 'next';
 
-interface PageParams {
-  params: { watchSlug: string };
-}
+export default async function VideoDetail({ params }: { params: Promise<{ watchSlug: string }> }) {
+  const { watchSlug } = await params;
+  const accent = 'watch';
+  const slug = watchSlug;
+  const formatDate = (d?: string) =>
+    d
+      ? new Date(d).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      : null;
+  const fallback: { item: Item; relatedItems: Item[] } = {
+        item: {
+          title: 'Content temporarily unavailable',
+          description: 'Please check back later.',
+          href: '#',
+          type: 'Not Available',
+          accent: 'watch',
+          published: false
+        },
+        relatedItems: []
+      };
+  
+      const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
+          fallback
+        );
 
-const fallback: { item: Item; relatedItems: Item[] } = {
-  item: {
-    title: 'Content temporarily unavailable',
-    description: 'Please check back later.',
-    href: '#',
-    type: 'Not Available',
-    accent: 'watch',
-    published: false
-  },
-  relatedItems: []
-};
-
-// ✅ Shared fetch logic so both page + metadata use the same data
-async function getVideoData(slug: string) {
-  return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/watch/${slug}`,
-    fallback
-  );
-}
-
-// ✅ Production‑safe dynamic metadata
-// export async function generateMetadata(
-//   { params }: PageParams,
-//   _parent: ResolvingMetadata
-// ): Promise<Metadata> {
-//   const { item } = await getVideoData(params.watchSlug);
-
-//   return buildMetadata({
-//     title: item.title,
-//     description: item.description
-//   });
-// }
-
-export default async function VideoDetail({ params }: PageParams) {
-  const { item, relatedItems } = await getVideoData(params.watchSlug);
 
   return (
     <>
