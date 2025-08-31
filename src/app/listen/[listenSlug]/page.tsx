@@ -11,7 +11,7 @@ const accent = 'listen';
 // ✅ Generate dynamic <title> and <meta description>
 export async function generateMetadata(
   { params }: { params: { listenSlug: string } }
-): Promise<Metadata> {
+) {
   const slug = params.listenSlug;
 
   const fallback: { item: Item; relatedItems: Item[] } = {

@@ -9,7 +9,7 @@ import { buildMetadata } from '../../../lib/metadata';
 const accent = 'read';
 export async function generateMetadata(
   { params }: { params: { readSlug: string } }
-): Promise<Metadata> {
+){
   const slug = params.readSlug;
 
   const fallback: { item: Item; relatedItems: Item[] } = {
