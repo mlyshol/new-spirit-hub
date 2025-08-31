@@ -1,11 +1,14 @@
+// app/listen/[listenSlug]/page.tsx
 import type { Metadata } from 'next';
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
+import { buildMetadata } from '../../../lib/metadata'; // your helper
 
 const accent = 'listen';
 
+// ✅ Generate dynamic <title> and <meta description>
 export async function generateMetadata(
   { params }: { params: { listenSlug: string } }
 ): Promise<Metadata> {
@@ -18,9 +21,9 @@ export async function generateMetadata(
       href: '#',
       type: 'Not Available',
       accent,
-      published: false
+      published: false,
     },
-    relatedItems: []
+    relatedItems: [],
   };
 
   const { item } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
@@ -28,19 +31,19 @@ export async function generateMetadata(
     fallback
   );
 
-  return {
-    title: `${item.title} – The Spirit Hub`,
+  return buildMetadata({
+    title: item.title,
     description: item.description
-      ? stripHtml(item.description).slice(0, 160)
-      : 'Listen to inspiring faith‑centered content on The Spirit Hub.'
-  };
+      ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
+      : 'Listen to inspiring faith‑centered content on The Spirit Hub.',
+  });
 }
 
-function stripHtml(html: string) {
-  return html.replace(/<[^>]*>?/gm, '');
-}
-
-export default async function ListenDetail({ params }: { params: { listenSlug: string } }) {
+export default async function ListenDetail({
+  params,
+}: {
+  params: { listenSlug: string };
+}) {
   const slug = params.listenSlug;
 
   const fallback: { item: Item; relatedItems: Item[] } = {
@@ -50,9 +53,9 @@ export default async function ListenDetail({ params }: { params: { listenSlug: s
       href: '#',
       type: 'Not Available',
       accent,
-      published: false
+      published: false,
     },
-    relatedItems: []
+    relatedItems: [],
   };
 
   const { item, relatedItems } = await safeFetchItems<{ item: Item; relatedItems: Item[] }>(
@@ -62,7 +65,18 @@ export default async function ListenDetail({ params }: { params: { listenSlug: s
 
   return (
     <>
-      <DetailPage {...item}>
+      <DetailPage
+        title={item.title}
+        description={item.description}
+        href={item.href}
+        type={item.type}
+        originalDate={item.originalDate}
+        publishedDate={item.publishedDate}
+        category={item.category}
+        date={item.date}
+        image={item.image}
+        accent={item.accent}
+      >
         {item.description && (
           <div dangerouslySetInnerHTML={{ __html: item.description }} />
         )}

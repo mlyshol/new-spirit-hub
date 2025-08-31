@@ -1,9 +1,17 @@
 import PillarPage from '../../components/PillarPage';
 import type { Metadata } from 'next';
+import { buildMetadata } from '../../lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'About',
-};
+const PAGE_TITLE = 'About';
+const PAGE_DESCRIPTION =
+  'Making faith‑centered content beautiful, accessible, and inspiring.';
+
+export function generateMetadata(): Metadata {
+  return buildMetadata({
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  });
+}
 
 
 
@@ -12,8 +20,8 @@ export default function AboutPage() {
     <PillarPage
       accent="about"
       emoji="ℹ️"
-      title="About"
-      description="Making faith‑centered content beautiful, accessible, and inspiring."
+      title={PAGE_TITLE}
+      description={PAGE_DESCRIPTION}
       hideGrid
       items={[]}
     >

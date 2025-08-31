@@ -1,15 +1,22 @@
 import PillarPage from '../../components/PillarPage';
 import type { Metadata } from 'next';
+import { buildMetadata } from '../../lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Support',
-};
+const PAGE_TITLE = 'Support';
+const PAGE_DESCRIPTION =
+  'Partner with us to make faith‑centered content accessible and inspiring.';
 
+export function generateMetadata(): Metadata {
+  return buildMetadata({
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  });
+}
 
 export default function SupportPage() {
   return (
     <PillarPage
-      accent="support" // or create a 'support' accent in your Tailwind config if you want a unique color
+      accent="support"
       emoji="🤝"
       title="Support"
       description="Partner with us to make faith‑centered content accessible and inspiring."
