@@ -3,6 +3,7 @@ import CuratedRead from 'src/components/CuratedRead';
 import RelatedContent from 'src/components/RelatedContent';
 import { Item } from 'src/types';
 import { safeFetchItems } from 'src/lib/safeFetch';
+
 export default async function ReadDetail({
   params
 }: {

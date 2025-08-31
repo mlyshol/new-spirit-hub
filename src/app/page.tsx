@@ -5,7 +5,7 @@ import { Item } from 'src/types';
 import type { Metadata } from 'next';
 import { buildMetadata } from 'src/lib/metadata';
 
-const PAGE_TITLE = 'The Spirit Hub';
+const PAGE_TITLE = 'Home';
 const PAGE_DESCRIPTION =
   'Watch. Listen. Read. Christ-centered content to guide and encourage your walk. Step into the Hub.';
 export function generateMetadata(): Metadata {
