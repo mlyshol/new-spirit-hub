@@ -30,17 +30,17 @@ async function getVideoData(slug: string) {
 }
 
 // ✅ Production‑safe dynamic metadata
-export async function generateMetadata(
-  { params }: PageParams,
-  _parent: ResolvingMetadata
-): Promise<Metadata> {
-  const { item } = await getVideoData(params.watchSlug);
+// export async function generateMetadata(
+//   { params }: PageParams,
+//   _parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//   const { item } = await getVideoData(params.watchSlug);
 
-  return buildMetadata({
-    title: item.title,
-    description: item.description
-  });
-}
+//   return buildMetadata({
+//     title: item.title,
+//     description: item.description
+//   });
+// }
 
 export default async function VideoDetail({ params }: PageParams) {
   const { item, relatedItems } = await getVideoData(params.watchSlug);
