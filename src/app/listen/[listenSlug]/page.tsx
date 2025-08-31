@@ -30,7 +30,7 @@ async function fetchListenDetail(slug: string) {
 
 export async function generateMetadata(
   { params }: { params: { listenSlug: string } }
-): Promise<Metadata> {
+){
   const { item } = await fetchListenDetail(params.listenSlug);
 
   return buildMetadata({
