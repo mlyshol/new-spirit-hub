@@ -1,36 +1,34 @@
+// app/listen/[listenSlug]/page.tsx
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
-
 export default async function ListenDetail({
-  params,
+  params
 }: {
-  params: { listenSlug: string };
+  params: Promise<{ listenSlug: string }>;
 }) {
-  const slug = params.listenSlug; // ✅ no await needed
+  const { listenSlug } = await params;
   const accent = 'listen';
+  const slug = listenSlug;
 
   const fallback: { item: Item; relatedItems: Item[] } = {
-    item: {
-      title: 'Content temporarily unavailable',
-      description: 'Please check back later.',
-      href: '#',
-      type: 'Not Available',
-      accent,
-      published: false,
-    },
-    relatedItems: [],
-  };
-
-  const { item, relatedItems } = await safeFetchItems<{
-    item: Item;
-    relatedItems: Item[];
-  }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-    fallback
-  );
-
+        item: {
+          title: 'Content temporarily unavailable',
+          description: 'Please check back later.',
+          href: '#',
+          type: 'Not Available',
+          accent: 'listen',
+          published: false
+        },
+        relatedItems: []
+      };
+  
+      const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
+          fallback
+        );
+        
   return (
     <>
       <DetailPage
