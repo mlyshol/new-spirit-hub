@@ -9,7 +9,7 @@ const accent = 'watch';
 
 export async function generateMetadata(
   { params }: { params: { watchSlug: string } }
-) {
+): Promise<Metadata> {
   const slug = params.watchSlug;
 
   const fallback: { item: Item; relatedItems: Item[] } = {
