@@ -32,7 +32,7 @@ async function getVideoData(slug: string) {
 // Runs before rendering to set SEO tags
 export async function generateMetadata(
   { params }: PageParams
-): Promise<Metadata> {
+){
   const { item } = await getVideoData(params.watchSlug);
 
   return buildMetadata({
