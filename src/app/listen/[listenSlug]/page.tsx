@@ -8,10 +8,11 @@ import { buildMetadata } from '../../../lib/metadata';
 
 const accent = 'listen';
 
-// ✅ Single source of truth for params type
-type ListenPageParams = { listenSlug: string };
+// ✅ Local params type — no dependency on global PageProps
+interface ListenPageParams {
+  listenSlug: string;
+}
 
-// Centralized fetch so metadata + page share the same logic
 async function fetchListenDetail(slug: string) {
   const fallback: { item: Item; relatedItems: Item[] } = {
     item: {
@@ -31,10 +32,10 @@ async function fetchListenDetail(slug: string) {
   );
 }
 
-// ✅ Params type matches folder name exactly
 export async function generateMetadata(
-  { params }: { params: ListenPageParams }
+  context: { params: ListenPageParams }
 ): Promise<Metadata> {
+  const { params } = context;
   const { item } = await fetchListenDetail(params.listenSlug);
 
   return buildMetadata({
@@ -45,10 +46,10 @@ export async function generateMetadata(
   });
 }
 
-// ✅ Page component uses the same params type
 export default async function ListenDetailPage(
-  { params }: { params: ListenPageParams }
+  context: { params: ListenPageParams }
 ) {
+  const { params } = context;
   const { item, relatedItems } = await fetchListenDetail(params.listenSlug);
 
   return (
