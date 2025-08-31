@@ -1,34 +1,39 @@
-// app/listen/[listenSlug]/page.tsx
 import DetailPage from 'src/components/DetailPage';
 import RelatedContent from 'src/components/RelatedContent';
 import { Item } from 'src/types';
 import { safeFetchItems } from 'src/lib/safeFetch';
-export default async function ListenDetail({
-  params
-}: {
-  params: Promise<{ listenSlug: string }>;
-}) {
-  const { listenSlug } = await params;
-  const accent = 'listen';
-  const slug = listenSlug;
 
-  const fallback: { item: Item; relatedItems: Item[] } = {
-        item: {
-          title: 'Content temporarily unavailable',
-          description: 'Please check back later.',
-          href: '#',
-          type: 'Not Available',
-          accent: 'listen',
-          published: false
-        },
-        relatedItems: []
-      };
-  
-      const {item,relatedItems } = await safeFetchItems<{item:Item; relatedItems: Item[] }>(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/${accent}/${slug}`,
-          fallback
-        );
-        
+// Keep params as a Promise type
+interface PageParams {
+  params: Promise<{ listenSlug: string }>;
+}
+
+const fallback: { item: Item; relatedItems: Item[] } = {
+  item: {
+    title: 'Content temporarily unavailable',
+    description: 'Please check back later.',
+    href: '#',
+    type: 'Not Available',
+    accent: 'listen',
+    published: false
+  },
+  relatedItems: []
+};
+
+// Shared fetch helper so you can reuse it in generateMetadata later if needed
+async function getListenData(slug: string) {
+  return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/listen/${slug}`,
+    fallback
+  );
+}
+
+export default async function ListenDetail({ params }: PageParams) {
+  // ✅ Await the promise before destructuring
+  const { listenSlug } = await params;
+
+  const { item, relatedItems } = await getListenData(listenSlug);
+
   return (
     <>
       <DetailPage
