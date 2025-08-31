@@ -28,18 +28,18 @@ async function fetchListenDetail(slug: string) {
   );
 }
 
-export async function generateMetadata(
-  { params }: { params: { listenSlug: string } }
-): Promise<Metadata> {
-  const { item } = await fetchListenDetail(params.listenSlug);
+// export async function generateMetadata(
+//   { params }: { params: { listenSlug: string } }
+// ): Promise<Metadata> {
+//   const { item } = await fetchListenDetail(params.listenSlug);
 
-  return buildMetadata({
-    title: item.title,
-    description: item.description
-      ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
-      : 'Listen to inspiring faith‑centered content on The Spirit Hub.',
-  });
-}
+//   return buildMetadata({
+//     title: item.title,
+//     description: item.description
+//       ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
+//       : 'Listen to inspiring faith‑centered content on The Spirit Hub.',
+//   });
+// }
 
 export default async function ListenDetail({
   params,
