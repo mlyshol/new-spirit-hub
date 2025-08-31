@@ -2,13 +2,12 @@ import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
 import { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
+import { buildMetadata } from 'src/lib/metadata';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 interface PageParams {
   params: { watchSlug: string };
 }
-
-const siteName = 'The Spirit Hub';
 
 const fallback: { item: Item; relatedItems: Item[] } = {
   item: {
@@ -22,7 +21,7 @@ const fallback: { item: Item; relatedItems: Item[] } = {
   relatedItems: []
 };
 
-// Shared fetch logic
+// Shared fetch so we only hit the API once
 async function getVideoData(slug: string) {
   return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
     `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/watch/${slug}`,
@@ -30,38 +29,21 @@ async function getVideoData(slug: string) {
   );
 }
 
-// ✅ Inline metadata without buildMetadata
+// ✅ Dynamic metadata using your helper
 export async function generateMetadata(
   { params }: PageParams,
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { item } = await getVideoData(params.watchSlug);
 
-  const fullTitle = item.title
-    ? `${item.title} – ${siteName}`
-    : siteName;
-  const description =
-    item.description || 'Faith‑centered content to inspire and connect.';
-
-  return {
-    title: fullTitle,
-    description,
-    openGraph: {
-      title: fullTitle,
-      description,
-      siteName
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: fullTitle,
-      description
-    }
-  };
+  return buildMetadata({
+    title: item.title,
+    description: item.description
+  });
 }
 
 export default async function VideoDetail({ params }: PageParams) {
-  const { watchSlug } = params;
-  const { item, relatedItems } = await getVideoData(watchSlug);
+  const { item, relatedItems } = await getVideoData(params.watchSlug);
 
   return (
     <>
