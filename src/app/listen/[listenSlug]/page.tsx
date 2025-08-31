@@ -2,11 +2,14 @@
 import type { Metadata } from 'next';
 import DetailPage from '../../../components/DetailPage';
 import RelatedContent from '../../../components/RelatedContent';
-import { Item } from '../../../types';
+import type { Item } from '../../../types';
 import { safeFetchItems } from '../../../lib/safeFetch';
 import { buildMetadata } from '../../../lib/metadata';
 
 const accent = 'listen';
+
+// ✅ Single source of truth for params type
+type ListenPageParams = { listenSlug: string };
 
 // Centralized fetch so metadata + page share the same logic
 async function fetchListenDetail(slug: string) {
@@ -28,24 +31,24 @@ async function fetchListenDetail(slug: string) {
   );
 }
 
-// export async function generateMetadata(
-//   { params }: { params: { listenSlug: string } }
-// ): Promise<Metadata> {
-//   const { item } = await fetchListenDetail(params.listenSlug);
+// ✅ Params type matches folder name exactly
+export async function generateMetadata(
+  { params }: { params: ListenPageParams }
+): Promise<Metadata> {
+  const { item } = await fetchListenDetail(params.listenSlug);
 
-//   return buildMetadata({
-//     title: item.title,
-//     description: item.description
-//       ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
-//       : 'Listen to inspiring faith‑centered content on The Spirit Hub.',
-//   });
-// }
+  return buildMetadata({
+    title: item.title,
+    description: item.description
+      ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 160)
+      : 'Listen to inspiring faith‑centered content on The Spirit Hub.',
+  });
+}
 
-export default async function ListenDetail({
-  params,
-}: {
-  params: { listenSlug: string };
-}) {
+// ✅ Page component uses the same params type
+export default async function ListenDetailPage(
+  { params }: { params: ListenPageParams }
+) {
   const { item, relatedItems } = await fetchListenDetail(params.listenSlug);
 
   return (
