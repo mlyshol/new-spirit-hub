@@ -29,7 +29,7 @@ export default async function Home() {
       <section
         className="
           relative 
-          h-[50vh] sm:h-[40vh] lg:h-[30vh] 
+          h-[50vh] sm:min-h-[40vh] lg:h-[30vh] 
           flex items-center justify-center 
           text-center text-white
         "
