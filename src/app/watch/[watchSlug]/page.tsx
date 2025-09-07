@@ -34,23 +34,43 @@ export async function generateMetadata(
   { params }: PageParams,
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // ✅ Await the promise before using it
   const { watchSlug } = await params;
-
   const { item } = await getVideoData(watchSlug);
 
-  return buildMetadata({
-    title: item.title,
-    description: item.description
-  });
+  // Strip HTML tags from description for meta
+  const plainDescription = item.description
+    ? item.description.replace(/<[^>]+>/g, '').trim()
+    : '';
+
+  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/watch/${watchSlug}`;
+
+  return {
+    ...buildMetadata({
+      title: item.title,
+      description: plainDescription
+    }),
+    alternates: {
+      canonical: canonicalUrl
+    },
+    openGraph: {
+      title: item.title,
+      description: plainDescription,
+      url: canonicalUrl,
+      type: 'video.other',
+      images: item.image ? [{ url: item.image, alt: item.title }] : []
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: item.title,
+      description: plainDescription,
+      images: item.image ? [item.image] : []
+    }
+  };
 }
 
 export default async function VideoDetail({ params }: PageParams) {
-  // ✅ Await the promise before using it
   const { watchSlug } = await params;
-
   const { item, relatedItems } = await getVideoData(watchSlug);
-
 
   return (
     <>

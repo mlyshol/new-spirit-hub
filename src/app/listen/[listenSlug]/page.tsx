@@ -4,7 +4,7 @@ import { Item } from 'src/types';
 import { safeFetchItems } from 'src/lib/safeFetch';
 import { buildMetadata } from 'src/lib/metadata';
 import type { Metadata, ResolvingMetadata } from 'next';
-// Keep params as a Promise type
+
 interface PageParams {
   params: Promise<{ listenSlug: string }>;
 }
@@ -21,7 +21,7 @@ const fallback: { item: Item; relatedItems: Item[] } = {
   relatedItems: []
 };
 
-// Shared fetch helper so you can reuse it in generateMetadata later if needed
+// Shared fetch helper
 async function getListenData(slug: string) {
   return safeFetchItems<{ item: Item; relatedItems: Item[] }>(
     `${process.env.NEXT_PUBLIC_API_URL}/api/item-detail/listen/${slug}`,
@@ -33,21 +33,42 @@ export async function generateMetadata(
   { params }: PageParams,
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // ✅ Await the promise before using it
   const { listenSlug } = await params;
-
   const { item } = await getListenData(listenSlug);
 
-  return buildMetadata({
-    title: item.title,
-    description: item.description
-  });
+  // Strip HTML tags from description for meta
+  const plainDescription = item.description
+    ? item.description.replace(/<[^>]+>/g, '').trim()
+    : '';
+
+  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/listen/${listenSlug}`;
+
+  return {
+    ...buildMetadata({
+      title: item.title,
+      description: plainDescription
+    }),
+    alternates: {
+      canonical: canonicalUrl
+    },
+    openGraph: {
+      title: item.title,
+      description: plainDescription,
+      url: canonicalUrl,
+      type: 'music.radio_station', // or 'music.song' if appropriate
+      images: item.image ? [{ url: item.image, alt: item.title }] : []
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: item.title,
+      description: plainDescription,
+      images: item.image ? [item.image] : []
+    }
+  };
 }
 
 export default async function ListenDetail({ params }: PageParams) {
-  // ✅ Await the promise before destructuring
   const { listenSlug } = await params;
-
   const { item, relatedItems } = await getListenData(listenSlug);
 
   return (
