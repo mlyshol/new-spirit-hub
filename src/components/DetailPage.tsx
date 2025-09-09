@@ -1,4 +1,5 @@
-import { Item } from '../types';
+import { Item } from 'src/types';
+import ShareButtons from 'src/components/ShareButtons';
 
 export type DetailPageProps = Item & {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export default function DetailPage({
   publishedDate,
   image,
   accent,
+  href,
   children,
 }: DetailPageProps) {
   const fallbackImage = `/images/default_${accent}.jpg`;
@@ -60,6 +62,10 @@ export default function DetailPage({
             Published on Spirit Hub: {formatDate(publishedDate)}
           </div>
         )}
+      <ShareButtons
+        title={title}
+        url={`${process.env.NEXT_PUBLIC_SITE_URL}${href}`}
+      />
       </section>
     </article>
   );
