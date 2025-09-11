@@ -42,7 +42,7 @@ export default function DetailPage({
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 px-4">
-          <h1 className="text-4xl font-heading mb-2">{title}</h1>
+          <h1 className="text-3xl font-heading mb-2">{title}</h1>
           <p className="text-sm text-white/80">
             <span
               className={`bg-${accent} text-white px-2 py-1 rounded mr-2 text-xs font-semibold`}
