@@ -1,3 +1,11 @@
-# https://www.robotstxt.org/robotstxt.html
+# =========================================================
+# Spirit Hub robots.txt
+# Purpose: Allow full access to all public content
+# Reference: https://www.robotstxt.org/robotstxt.html
+# =========================================================
+
 User-agent: *
 Disallow:
+
+# 🔍 Sitemap for priority crawling
+Sitemap: https://www.spirithub.com/sitemap.xml
