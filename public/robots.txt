@@ -8,4 +8,4 @@ User-agent: *
 Disallow:
 
 # 🔍 Sitemap for priority crawling
-Sitemap: https://www.spirithub.com/sitemap.xml
+Sitemap: https://www.thespirithub.com/sitemap.xml
