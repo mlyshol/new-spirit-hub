@@ -45,6 +45,21 @@ export default function SupportPage() {
           >
             Donate Now
           </a>
+        </p><br/>
+
+        <h2 className="text-3xl font-bold text-support mb-4">The Spirit Hub Gear</h2>
+        <p className="prose prose-lg prose-neutral mb-4">
+          Another way to support Spirit Hub is by visiting our Shop — every purchase helps us share the Spirit.
+        </p>
+        <p className="prose prose-lg prose-neutral mb-4">
+          <a
+            href="https://www.etsy.com/shop/TheSpiritHubGear?ref=https://www.thespirithub.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-support text-white font-semibold px-6 py-3 rounded-lg shadow hover:bg-support-dark transition"
+          >
+            Shop at The Spirit Hub Gear
+          </a>
         </p>
       </section>
     </PillarPage>

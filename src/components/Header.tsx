@@ -26,6 +26,7 @@ export default function Header() {
           <Link href="/search" className="hover:text-search">Search</Link>
           <Link href="/about" className="hover:text-about">About</Link>
           <Link href="/support" className="hover:text-support">Support</Link>
+          <Link href="https://www.etsy.com/shop/TheSpiritHubGear?ref=https://thespirithub.com" target="_blank" className="hover:text-support">Shop</Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -68,6 +69,7 @@ export default function Header() {
           <Link href="/search" onClick={handleLinkClick} className="block hover:text-search">Search</Link>
           <Link href="/about" onClick={handleLinkClick} className="block hover:text-about">About</Link>
           <Link href="/support" onClick={handleLinkClick} className="block hover:text-support">Support</Link>
+          <Link href="https://www.etsy.com/shop/TheSpiritHubGear?ref=https://thespirithub.com" onClick={handleLinkClick}  target="_blank" className="block hover:text-support">Shop</Link>
         </div>
       )}
     </header>
