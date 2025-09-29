@@ -28,7 +28,11 @@ async function getVideoData(slug: string) {
     fallback
   );
 }
-
+function truncateForMeta(text: string, maxLength = 150): string {
+  if (!text) return '';
+  const clean = text.replace(/\s+/g, ' ').trim();
+  return clean.length > maxLength ? clean.slice(0, maxLength - 1).trim() + '…' : clean;
+}
 // ✅ Runs before render, sets metadata dynamically
 export async function generateMetadata(
   { params }: PageParams,
@@ -41,20 +45,20 @@ export async function generateMetadata(
   const plainDescription = item.description
     ? item.description.replace(/<[^>]+>/g, '').trim()
     : '';
-
+  const metaDescription = truncateForMeta(plainDescription, 150);
   const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/watch/${watchSlug}`;
 
   return {
     ...buildMetadata({
       title: item.title,
-      description: plainDescription
+      description: metaDescription
     }),
     alternates: {
       canonical: canonicalUrl
     },
     openGraph: {
       title: item.title,
-      description: plainDescription,
+      description: metaDescription,
       url: canonicalUrl,
       type: 'video.other',
       images: item.image ? [{ url: item.image, alt: item.title }] : []
@@ -62,7 +66,7 @@ export async function generateMetadata(
     twitter: {
       card: 'summary_large_image',
       title: item.title,
-      description: plainDescription,
+      description: metaDescription,
       images: item.image ? [item.image] : []
     }
   };
